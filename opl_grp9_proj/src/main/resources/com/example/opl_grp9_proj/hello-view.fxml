@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.opl_grp9_proj.HelloViewController">
+    <!-- Username Label -->
+    <Label text="Username:" layoutX="50" layoutY="100" />
+
+    <!-- Username TextField -->
+    <TextField fx:id="usernameField" layoutX="150" layoutY="100" />
+
+    <!-- Password Label -->
+    <Label text="Password:" layoutX="50" layoutY="150" />
+
+    <!-- Password TextField -->
+    <PasswordField fx:id="passwordField" layoutX="150" layoutY="150" />
+
+    <!-- Login Button -->
+    <Button text="Login" layoutX="150" layoutY="200" onAction="#handleLoginAction" />
+
+    <!-- Error message -->
+    <Label fx:id="errorLabel" text="" layoutX="150" layoutY="250" style="-fx-text-fill: red;" />
+</AnchorPane>
