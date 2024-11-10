@@ -1,44 +1,73 @@
 package com.example.opl_grp9_proj;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.stage.Stage;
+import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
+import javafx.scene.layout.AnchorPane;
 
-import java.io.IOException;
+import java.util.List;
 
 public class WelcomeController {
 
     @FXML
-    private Label welcomeLabel;  // Display stock symbol or welcome message
+    private TextField stock1Field;
 
-    private Stage stage;  // Store the current Stage (window)
-
-    // This method sets the welcome message (username or stock symbol)
-    public void setWelcomeMessage(String message) {
-        if (welcomeLabel != null) {
-            welcomeLabel.setText(message);  // Set text in label to show stock symbol or welcome message
-        } else {
-            System.err.println("Error: welcomeLabel is null");
-        }
-    }
-
-    // Called when the user clicks a button to show the stock chart
     @FXML
-    private void onShowChartClick() {
-        String stockSymbol = welcomeLabel.getText();  // Assuming the symbol is in the label text
-        try {
-            if (stockSymbol != null && !stockSymbol.trim().isEmpty()) {
-                StockChartApp.start(stage, stockSymbol);
-            } else {
-                System.err.println("Error: Stock symbol is empty.");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private TextField stock2Field;
+
+    @FXML
+    private Button submitButton;
+
+    @FXML
+    private Label errorMessage;
+
+    @FXML
+    private Label welcomeMessage;
+
+    private String username;
+
+
+    public void setUsername(String username) {
+        this.username = username;
+        welcomeMessage.setText("Welcome, " + username);
     }
 
-    // Setter to inject Stage from the LoginApp or any other part
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    @FXML
+    protected void handleSubmitButton() {
+        String stock1 = stock1Field.getText().toUpperCase();
+        String stock2 = stock2Field.getText().toUpperCase();
+
+
+        if (stock1.isEmpty() || stock2.isEmpty()) {
+            errorMessage.setTextFill(Color.RED);
+            errorMessage.setText("Please fill in both stock symbols!");
+        } else {
+            try {
+
+                StockPriceFetcher priceFetcher = new StockPriceFetcher();
+                List<StockData> stock1DataList = priceFetcher.fetchStockData(stock1);
+                List<StockData> stock2DataList = priceFetcher.fetchStockData(stock2);
+                if (!stock1DataList.isEmpty() && !stock2DataList.isEmpty()) {
+
+                    String[] timeIntervals = stock1DataList.get(0).getTimeIntervals();
+                    double[] stock1ClosePrices = stock1DataList.get(0).getClosePrices();
+                    double[] stock2ClosePrices = stock2DataList.get(0).getClosePrices();
+
+
+                    StockChartApp chartApp = new StockChartApp();
+                    chartApp.displayChart(timeIntervals, stock1ClosePrices, timeIntervals, stock2ClosePrices);
+
+                } else {
+                    errorMessage.setTextFill(Color.RED);
+                    errorMessage.setText("Error fetching stock data!");
+                }
+
+            } catch (Exception e) {
+                errorMessage.setTextFill(Color.RED);
+                errorMessage.setText("Error fetching stock data: " + e.getMessage());
+            }
+        }
     }
 }

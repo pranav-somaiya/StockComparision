@@ -1,36 +1,47 @@
 package com.example.opl_grp9_proj;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.fxml.FXMLLoader;
+
+import java.io.IOException;
 
 public class HelloViewController {
-    @FXML private TextField usernameField;  // Username input field
-    @FXML private PasswordField passwordField;  // Password input field
-    @FXML private Label errorLabel;  // Label for showing error messages
-
-    private LoginApp loginApp;  // Reference to the LoginApp instance for scene transitions
-
-    // Set the LoginApp instance for this controller
-    public void setLoginApp(LoginApp loginApp) {
-        this.loginApp = loginApp;
-    }
 
     @FXML
-    private void handleLoginAction() {
-        String username = usernameField.getText().trim();
-        String password = passwordField.getText().trim();
+    private TextField usernameField;
+
+    @FXML
+    private TextField passwordField;
+
+    @FXML
+    private Label errorMessage;
+
+    @FXML
+    private Button okayButton;
+
+    @FXML
+    protected void handleOkayButton() throws IOException {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
 
         if (username.isEmpty() || password.isEmpty()) {
-            errorLabel.setText("Please fill in both fields.");  // Show error if fields are empty
+            errorMessage.setTextFill(Color.RED);
+            errorMessage.setText("Please fill in both username and password!");
         } else {
-            // Clear any previous error messages
-            errorLabel.setText("");
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Welcome_view.fxml"));
+            Stage stage = (Stage) okayButton.getScene().getWindow();
+            Scene scene = new Scene(loader.load());
+            stage.setScene(scene);
 
-            // Proceed to the welcome view with the username
-            loginApp.setUsername(username);
-            loginApp.showWelcomeView(username);  // Pass the username to the welcome view
+
+            WelcomeController controller = loader.getController();
+            controller.setUsername(username);
         }
     }
 }

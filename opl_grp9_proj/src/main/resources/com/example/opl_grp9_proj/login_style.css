@@ -1,0 +1,34 @@
+.root {
+    -fx-background-color: #BDC3C7;
+    -fx-font-family: 'Arial';
+}
+
+.add-stock-button {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-min-width: 150px;
+    -fx-max-width: 200px;
+    -fx-alignment: center-left;
+}
+
+.error-message {
+    -fx-text-fill: red;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.sub_title {
+    -fx-font-size: 14px;
+    -fx-text-fill: #FFFFFF;
+}
+
+.form_style {
+    -fx-background-color: #ECF0F1;
+    -fx-border-color: #BDC3C7;
+    -fx-padding: 10px;
+    -fx-border-radius: 4px;
+    -fx-pref-width: 250px;
+}

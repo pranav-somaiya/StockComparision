@@ -1,50 +1,72 @@
 package com.example.opl_grp9_proj;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
+
 public class AlphaVantageAPI {
 
-    private static final String API_KEY = "MNV1WO8GNK85QT9F"; // Your API key here
-    private static final String BASE_URL = "https://www.alphavantage.co/query?";
+    private static final String API_KEY = "MNV1WO8GNK85QT9F";
 
-    // Method to fetch stock data
-    public static List<StockData> fetchStockData(String symbol) throws IOException {
-        String url = BASE_URL + "function=TIME_SERIES_DAILY&symbol=" + symbol + "&apikey=" + API_KEY;
+    public StockData fetchStockData(String stockSymbol) {
+        ArrayList<String> timeIntervalsList = new ArrayList<>();
+        ArrayList<Double> closePricesList = new ArrayList<>();
 
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(url).build();
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new IOException("Unexpected code " + response);
+        try {
+
+            String urlString = String.format(
+                    "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=%s&interval=15min&apikey=%s",
+                    stockSymbol, API_KEY);
+
+
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.connect();
+
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
             }
+            reader.close();
 
-            String responseData = response.body().string();
 
-            // Use Jackson to parse the JSON response
             ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(responseData);
-            JsonNode timeSeries = jsonNode.get("Time Series (Daily)");
+            JsonNode responseObject = objectMapper.readTree(response.toString());
 
-            List<StockData> stockDataList = new ArrayList<>();
-            Iterator<String> fieldNames = timeSeries.fieldNames();
 
-            // Iterate over the time series keys (dates) and extract the data
-            while (fieldNames.hasNext()) {
-                String date = fieldNames.next();
-                JsonNode dayData = timeSeries.get(date);
-                double closePrice = dayData.get("4. close").asDouble();
+            JsonNode timeSeries = responseObject.path("Time Series (15min)");
 
-                stockDataList.add(new StockData(date, closePrice));
+
+            for (Iterator<String> it = timeSeries.fieldNames(); it.hasNext(); ) {
+                String time = it.next();
+                JsonNode stockData = timeSeries.get(time);
+                double closePrice = stockData.path("4. close").asDouble();
+                timeIntervalsList.add(time);
+                closePricesList.add(closePrice);
             }
 
-            return stockDataList;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+
+        String[] timeIntervals = timeIntervalsList.toArray(new String[0]);
+        double[] closePrices = new double[closePricesList.size()];
+        for (int i = 0; i < closePricesList.size(); i++) {
+            closePrices[i] = closePricesList.get(i);
+        }
+
+
+        return new StockData(timeIntervals, closePrices);
     }
 }
