@@ -14,7 +14,7 @@ A stock price comparison application built in Java with JavaFX to compare the pe
 - **Java** - Core programming language used for the application.
 - **JavaFX** - For building the graphical user interface (GUI) and displaying charts.
 - **Alpha Vantage API** - Fetches real-time stock data for comparison.
-- **Maven** (optional) - For dependency management (if used).
+- **Maven** - For dependency management .
 
 ## Requirements
 
@@ -41,8 +41,7 @@ The application will automatically use 15-minute intervals for intraday stock da
 After entering the stock symbols, the application fetches the stock data from Alpha Vantage.
 A line chart will be displayed comparing the stock prices for the selected time interval.
 
-#Output
-Usage
+#Usage
 Run the Application:
 
 Run the Main class to start the application.
