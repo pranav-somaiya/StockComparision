@@ -15,7 +15,7 @@ public class StockPriceFetcher {
         return stockDataList;
     }
 
-    public List<StockData> fetchSimulatedStockData() {
+    public List<StockData> fetchSimStockData() {
 
         String[] timeIntervals = {
                 "09:30", "09:45", "10:00", "10:15", "10:30", "10:45", "11:00", "11:15", "11:30",

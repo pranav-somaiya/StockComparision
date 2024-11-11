@@ -5,16 +5,16 @@
 <?import javafx.scene.control.Button?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="welcomePane" fx:controller="com.example.opl_grp9_proj.WelcomeController">
-    <!-- Welcome Message Label -->
+
     <Label fx:id="welcomeMessage" text="Welcome!" layoutX="150" layoutY="50" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
 
-    <!-- Stock Input Fields -->
+
     <TextField fx:id="stock1Field" promptText="Enter Stock 1 Symbol" layoutX="150" layoutY="100"/>
     <TextField fx:id="stock2Field" promptText="Enter Stock 2 Symbol" layoutX="150" layoutY="150"/>
 
-    <!-- Submit Button -->
+
     <Button fx:id="submitButton" text="Submit" layoutX="150" layoutY="200" onAction="#handleSubmitButton"/>
 
-    <!-- Error Message Label -->
+
     <Label fx:id="errorMessage" text="" layoutX="150" layoutY="250" textFill="red"/>
 </AnchorPane>
